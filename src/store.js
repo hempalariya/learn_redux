@@ -1,13 +1,19 @@
-import { createStore } from "redux"
+import { combineReducers, createStore } from "redux"
 
-const initialState= {
+const initialStateAccount= {
     balance: 0,
     loan: 0,
     loanPurpose: ""
 }
 
+const initialStateCustomer ={
+    fullName: "",
+    nationalId: '',
+    createdAt: ''
+}
 
-function reducer (state = initialState, action){
+
+function accoutnReducer (state = initialStateAccount, action){
     switch(action.type){
         case "account/deposit":
             return {...state, balance: state.balance + action.payload}
@@ -23,7 +29,23 @@ function reducer (state = initialState, action){
 }
 
 
-const store = createStore(reducer)
+function customerReducer (state = initialStateCustomer, action){
+    switch(action.type){
+        case 'customer/createCustomer':
+            return {...state, fullName: action.payload.fullName, nationalId: action.payload.nationalId, createdAt: action.payload.createdAt}
+
+        case 'customer/updateName':
+            return {...state, fullName: action.payload}
+        default:
+            return state
+    }
+}
+
+const rootReducer = combineReducers({
+    account: accoutnReducer,
+    customer: customerReducer
+})
+const store = createStore(rootReducer)
 
 // store.dispatch({type: "account/deposit", payload: 500})
 // console.log(store.getState())
